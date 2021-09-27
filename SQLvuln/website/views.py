@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import SQLAlchemyError
 from .models import Note
 from . import db
 import json
@@ -32,10 +34,16 @@ def home():
 def search():
     if request.method == "POST":
         note_title = request.form.get("note_title")
-        query = db.session.execute(
-            f"Select data from note where note_title={note_title}"
-        )
-        flash(f"Your note is: {query.get()}")
+        try:
+            query = db.session.execute(
+                f"Select * from note where note_title='{note_title}'"
+            ).fetchone()
+            if query is None:
+                flash("Not note for this title")
+            else:
+                flash(f"Your note is: {query['data']}")
+        except SQLAlchemyError as e:
+            flash(e, category="error")
 
     return render_template("search.html", user=current_user)
 
