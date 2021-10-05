@@ -37,17 +37,14 @@
         <button onclick="gatoboton()" type="button" class="mt-5 btn btn-lg btn-primary">Generar foto aleatoria</button>
 
         <div class="card mx-auto mt-5" style="width: 18rem;">
-            <img src="static/img/17" class="card-img-top">
+	<img src="data:image/png;base64,<?php echo base64_encode(file_get_contents("static/img/{$_GET['foto']}")); ?>" class="card-img-top">
             <div class="card-body">
                 <h5 class="card-title">Miau miau</h5>
             </div>
         </div>
 
     </section>
-    <? php 
-        $filename = $_GET['foto'];
-        include($filename);
-    ?>
+   
 
 </body>
 
